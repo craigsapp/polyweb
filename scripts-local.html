@@ -1,0 +1,93 @@
+
+<script>
+// vim: ts=3
+
+var DATABASE = {};
+
+
+
+///////////////////////////////
+//
+// prepareListOfWorks --
+//
+
+function prepareListOfWorks() {
+	var request = new XMLHttpRequest();
+	request.open("GET", "kern/list.txt");
+	request.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			processFileList(this.responseText);
+		}
+	};
+	request.send();
+}
+
+
+
+//////////////////////////////
+//
+// processFileList --
+//
+
+function processFileList(text) {
+	filelist = text.match(/[^\r\n]+/g);
+	DATABASE = {};
+	for (var i=0; i<filelist.length; i++) {
+		var key = filelist[i];
+		var filename = filelist[i];
+		DATABASE[key] = {};
+		DATABASE[key].filename = filename;
+		var request = new XMLHttpRequest();
+		request.open("GET", "kern/" + filename);
+		(function(key) {
+			request.onreadystatechange =
+	   		function() {
+	    			if (this.readyState == 4 && this.status == 200) {
+						addFileToDatabase(key, this.responseText);
+					}
+				};
+		})(key);
+		request.send();
+	}
+}
+
+
+
+//////////////////////////////
+//
+// addFileToDatabase --
+//
+
+function addFileToDatabase(key, kern) {
+	if (kern.match(/^\s*$/)) {
+		delete DATABASE[key];
+		console.log("FILE", key, "is empty");
+		return;
+	}
+	var lines = kern.match(/[^\r\n]+/g);
+	var title = "";
+	var composer = "";
+	var matches;
+	for (var i=0; i<lines.length; i++) {
+		if (matches = lines[i].match(/^!!!OTL\s*:\s(.*)\s*$/)) {
+			title = matches[1];
+		}
+		if (matches = lines[i].match(/^!!!COM\s*:\s(.*)\s*$/)) {
+			composer = matches[1];
+		}
+	}
+	DATABASE[key].title = title;
+	DATABASE[key].composer = composer;
+	DATABASE[key].kern = kern;
+
+console.log(DATABASE[key]);
+	
+	// check to see if all scores have been downloaded, and then insert
+	// into webpage.
+}
+
+
+
+</script>
+
+
