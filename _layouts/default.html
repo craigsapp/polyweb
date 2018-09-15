@@ -3,7 +3,16 @@
 <!--
 	vim: ts=3
 -->
-	{% include head.html %}
+
+{% include head.html %}
+
+{% if page.handlebars == "true" %}
+	{% if site.local == "true" %}
+		<script src="{{site.baseurl}}/js/local/handlebars.js"></script>
+	{% else %}
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.12/handlebars.js"></script>
+	{% endif %}
+{% endif %}
 
 {% if page.verovio == "true" %}
 	{% if site.local == "true" %}

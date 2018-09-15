@@ -3,7 +3,7 @@
 // vim: ts=3
 
 var DATABASE = {};
-
+var vrvToolkit = new verovio.toolkit();
 
 
 ///////////////////////////////
@@ -80,10 +80,59 @@ function addFileToDatabase(key, kern) {
 	DATABASE[key].composer = composer;
 	DATABASE[key].kern = kern;
 
-console.log(DATABASE[key]);
-	
 	// check to see if all scores have been downloaded, and then insert
 	// into webpage.
+	var ready = 1;
+	for (var property in DATABASE) {
+		if (!DATABASE[property].kern) {
+			ready = 0;
+		}
+	}
+
+	if (ready) {
+		buildBrowseList();
+	}
+	
+}
+
+
+//////////////////////////////
+//
+// buildBrowseList --
+//
+
+function buildBrowseList() {
+	var tsource = document.querySelector("#browse-template").textContent;
+	var template = Handlebars.compile(tsource);
+	var element = document.querySelector("#browse-list");
+	element.innerHTML = template(DATABASE);
+	addSvgImages();
+}
+
+
+//////////////////////////////
+//
+// addSvgImages --
+//
+
+function addSvgImages() {
+	var options = {
+		scale: 35,
+		adjustPageHeight: 1,
+		pageHeight: 20000,
+		noHeader: 1,
+		noFooter: 1,
+		pageWidth: 2500
+	};
+
+	var kerns = document.querySelectorAll(".kern");
+	for (var i=0; i<kerns.length; i++) {
+		var data = kerns[i].textContent;
+		var parent = kerns[i].parentNode;
+		var svgslot = parent.querySelector("div.svg");
+		var svgdata = vrvToolkit.renderData(data, options);
+		svgslot.innerHTML = svgdata;
+	}
 }
 
 

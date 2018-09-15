@@ -1,16 +1,30 @@
 ---
 layout: "default"
 verovio: "true"
+handlebars: "true"
 vim:      ts=3
 ---
 
 {% include_relative listeners.html %}
+{% include_relative templates.html %}
 {% include_relative scripts-local.html %}
 
 <style>
-.btn:focus {
+.btn.entry:focus {
 	outline: none;
 	box-shadow: none;
+}
+
+.btn.entry {
+	border-width: 0px;
+	padding: 0px;
+}
+
+.composer {
+	color: #aa3333;
+}
+.title {
+	color: #3333aa;
 }
 </style>
 
@@ -21,14 +35,10 @@ vim:      ts=3
 		<hr class="star-dark mb-5">
 		<div class="row">
 
-		<button class="btn" data-toggle="collapse" data-target="#demo">Collapsible</button>
-		<div id="demo" class="collapse">
-			<br>
-			This is some text
-		</div>
-	
-		</div>
+			<div id="browse-list"></div>
 
+
+		</div>
 	</div>
 </section>
 
