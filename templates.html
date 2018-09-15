@@ -60,6 +60,10 @@ Handlebars.registerHelper("notation", function(obj) {
 //
 
 Handlebars.registerHelper("composer", function(composer) {
+	composer = composer.replace(/Martinu/, "Martinů")
+	                   .replace(/Varese/, "Varèse")
+	                   .replace(/Janacek/, "Janáček")
+	                   .replace(/Bartok/, "Bartók");
 	var value = "<span class='composer'>" + composer + "</span>";
 	return new Handlebars.SafeString(value);
 });
